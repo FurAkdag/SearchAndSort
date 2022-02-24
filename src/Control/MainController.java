@@ -132,13 +132,36 @@ public class MainController {
         time = System.nanoTime();
         loops = 0;
         // Binäre Suche Start
-
-            //TODO 01: Orientiere dich für die Messung der Schleifendurchgänge an der Linearen Suche und implementiere die Binäre Suche iterativ.
+        recursiveBinarySearch(key,0, moddedArray.length-1);
+        //TODO 01: Orientiere dich für die Messung der Schleifendurchgänge an der Linearen Suche und implementiere die Binäre Suche iterativ.
 
         // Binäre Suche Ende
         time = (System.nanoTime() - time)/1000;
         if(lastFound != null){
             lastFound.setMarked(true);
+        }
+    }
+
+    public void recursiveBinarySearch(int key, int start, int end){
+        int middle = (end+start)/2;
+        int i = start;
+        int j = end;
+
+        if(moddedArray[middle].getNumber() != key && i < j) {
+            System.out.println("I: "+i + " - J: "+j);
+            if (moddedArray[middle].getNumber() < key) {
+                recursiveBinarySearch(key, middle + 1, j);
+
+            }else if (moddedArray[middle].getNumber() > key) {
+                recursiveBinarySearch(key, i, middle - 1);
+
+            }
+
+        }else if(moddedArray[middle].getNumber() == key){
+            lastFound = moddedArray[middle];
+            lastFound.setMarked(true);
+        }else if(lastFound != null){
+            lastFound.setMarked(false);
         }
     }
 
@@ -172,9 +195,19 @@ public class MainController {
         loops = 0;
         switches = 0;
         // Selectionsort Start
-
-            //TODO 02: Orientiere dich für die Messung der Schleifendurchgänge und der tatsächlichen Vertauschungen an Bubblesort und implementiere Selectionsort inplace.
-
+        int help;
+        for(int i = 0; i < moddedArray.length; i++){
+            loops++;
+            help = i;
+            for (int j = i+1; j < moddedArray.length; j++){
+                loops++;
+                if(moddedArray[j].getNumber() < moddedArray[help].getNumber()){
+                    help = j;
+                }
+            }
+            switchBalls(help, i);
+        }
+        //TODO 02: Orientiere dich für die Messung der Schleifendurchgänge und der tatsächlichen Vertauschungen an Bubblesort und implementiere Selectionsort inplace.
         // Selection Sort Ende
         time = (System.nanoTime() - time)/1000;
         updateCoordinates();
@@ -188,13 +221,26 @@ public class MainController {
         loops = 0;
         switches = 0;
         // Insertionsort Start
-
-            //TODO 03: Orientiere dich für die Messung der Schleifendurchgänge und der tatsächlichen Vertauschungen an Bubblesort und implementiere Insertionssort inplace.
-
+        int help;
+        for(int i = 0; i < moddedArray.length - 1; i++){
+            loops++;
+            help = i;
+            for (int j = help; j >= 0; j--){
+                loops++;
+                if(moddedArray[j].getNumber() > moddedArray[help + 1].getNumber()){
+                    switchBalls(help + 1, j);
+                    help--;
+                }else{
+                    j = -1;
+                }
+            }
+        }
+        //TODO 03: Orientiere dich für die Messung der Schleifendurchgänge und der tatsächlichen Vertauschungen an Bubblesort und implementiere Insertionssort inplace.
         // Insertion Sort Ende
         time = (System.nanoTime() - time)/1000;
         updateCoordinates();
     }
+
 
     /**
      * Sortiert das modded-Array gemäß dem Quick-Sort-Algorithmus.
@@ -221,7 +267,26 @@ public class MainController {
         int pivot = moddedArray[middle].getNumber();
 
         //Beginn des Zaubers
-            //TODO 05: Programmiere den rekursiven Quicksortalgorithmus. Halte dich an den hier vorgegeben Rahmen.
+        //TODO 05: Programmiere den rekursiven Quicksortalgorithmus. Halte dich an den hier vorgegeben Rahmen.
+        while (i <= j) {
+            while (moddedArray[i].getNumber() < pivot) {
+                i++;
+            }
+            while (moddedArray[j].getNumber() > pivot) {
+                j--;
+            }
+            if (i <= j) {
+                switchBalls(i, j);
+                j--;
+                i++;
+            }
+        }
+        if(start < j){
+            quicksortRecursive(start,j);
+        }
+        if(i < end){
+            quicksortRecursive(i,end);
+        }
         //Ende des Zaubers
     }
 
